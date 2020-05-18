@@ -1,7 +1,10 @@
-﻿using BillingManagement.Models;
+﻿using BillingManagement.Business;
+using BillingManagement.Models;
 using BillingManagement.UI.ViewModels.Commands;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Text;
 using System.Windows;
 
@@ -31,6 +34,28 @@ namespace BillingManagement.UI.ViewModels
 			}
 		}
 
+		 BillingManagementContext database;/*
+		public BillingManagementContext Database
+		{
+			get => database;
+			set
+			{
+				database = value;
+				OnPropertyChanged();
+			}
+		}*/
+
+		private ObservableCollection<Customer> customers;
+		public ObservableCollection<Customer> Customers
+		{
+			get => customers;
+			set
+			{
+				customers = value;
+				OnPropertyChanged();
+			}
+		}
+
 
 		CustomerViewModel customerViewModel;
 		InvoiceViewModel invoiceViewModel;
@@ -48,6 +73,9 @@ namespace BillingManagement.UI.ViewModels
 
 		public MainViewModel()
 		{
+			customers = new ObservableCollection<Customer>();
+			//initDatabase();
+
 			ChangeViewCommand = new ChangeViewCommand(ChangeView);
 			DisplayInvoiceCommand = new DelegateCommand<Invoice>(DisplayInvoice);
 			DisplayCustomerCommand = new DelegateCommand<Customer>(DisplayCustomer);
@@ -55,12 +83,31 @@ namespace BillingManagement.UI.ViewModels
 			AddNewItemCommand = new DelegateCommand<object>(AddNewItem, CanAddNewItem);
 			AddInvoiceToCustomerCommand = new DelegateCommand<Customer>(AddInvoiceToCustomer);
 
-			SearchCommand = new RelayCommand<Customer>(SearchByCustomer);
+			SearchCommand = new RelayCommand<Customer>(SearchByCustomer, CanSearch);
 
 			customerViewModel = new CustomerViewModel();
 			invoiceViewModel = new InvoiceViewModel(customerViewModel.Customers);
 
 			VM = customerViewModel;
+		}
+		private bool CanSearch(object c)
+		{
+			if (VM == customerViewModel) return true;
+			return false;
+		}
+
+		private void initDatabase()
+		{
+			database = new BillingManagementContext();
+			List<Customer> Customers = new CustomersDataService().GetAll().ToList();
+
+					foreach (Customer cust in Customers)
+					{
+						database.Customers.Add(cust);
+				//database.Add(cust);
+						database.SaveChanges();
+					}
+
 
 		}
 
@@ -68,15 +115,28 @@ namespace BillingManagement.UI.ViewModels
 		{
 			string input = searchCriteria as string;
 			int output;
-			string searchMethod = "";
 
 			List<Customer> SearchResultCustomers = new List<Customer>();
 
 
 			if (!Int32.TryParse(input, out output))
 			{
-				searchMethod = "name";
-
+				//SearchResultCustomers = Database.Customers.Where(cust => cust.Name.ToLower().StartsWith(input.ToLower())).ToList();
+				if (SearchResultCustomers.Count < 1)
+				{
+					MessageBox.Show("No customer found with : " + input);
+				}
+				else
+				{
+					Customers.Clear();
+					foreach (Customer c in SearchResultCustomers)
+					{
+						Customers.Add(c);
+					}
+					Customers = new ObservableCollection<Customer>(Customers.OrderBy(cust => cust.LastName));
+					customerViewModel.Customers = Customers;
+					customerViewModel.SelectedCustomer = Customers.First();
+				}
 			}
 			else MessageBox.Show("Please enter a character, not numbers");
 		}

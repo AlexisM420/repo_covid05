@@ -52,7 +52,7 @@
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="Rechercher : " VerticalAlignment="Center"/>
                 <TextBox Text="{Binding SearchCriteria}" Width="150" Height="30" VerticalContentAlignment="Center"/>
-                <Button Content="Recherche" Command="{Binding SearchCommand}"/>
+                <Button Content="Recherche" Command="{Binding SearchCommand}" CommandParameter="{Binding vm}"/>
             </StackPanel>
 
         </ToolBar>
