@@ -1,0 +1,64 @@
+﻿<Window x:Class="Inventaire.MainWindowView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Inventaire"
+        xmlns:vm="clr-namespace:BillingManagement.UI.ViewModels"
+        xmlns:views="clr-namespace:BillingManagement.UI.Views"
+        mc:Ignorable="d"
+        Title="Gestion de clients" Width="1280" Height="968"
+        MinHeight="768" MinWidth="800">
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type vm:CustomerViewModel}">
+            <views:CustomersView DataContext="{Binding}"/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:InvoiceViewModel}">
+            <views:InvoicesView DataContext="{Binding}" />
+        </DataTemplate>
+    </Window.Resources>
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top">
+            <Menu>
+                <MenuItem Header="_Fichier">
+                    <MenuItem Header="_Ouvrir..."/>
+                    <MenuItem Header="_Sauvegarder"/>
+                    <MenuItem Header="_Fermer"/>
+                    <Separator/>
+                    <MenuItem Header="_Nouveau client"/>
+                    <Separator/>
+                    <MenuItem Header="_Quitter" Click="Exit_Click"/>
+                </MenuItem>
+                <MenuItem Header="_Édition">
+                    <MenuItem Header="Couper..."/>
+                    <MenuItem Header="Copier"/>
+                    <MenuItem Header="Coller"/>
+                </MenuItem>
+                <MenuItem Header="Affichage">
+                    <MenuItem Header="Clients" Command="{Binding ChangeViewCommand}" CommandParameter="customers"/>
+                    <MenuItem Header="Factures" Command="{Binding ChangeViewCommand}" CommandParameter="invoices"/>
+                </MenuItem>
+                <MenuItem Header="Enregistrement">
+                    <MenuItem Header="Nouveau" Command="{Binding AddNewItemCommand}" />
+                </MenuItem>
+            </Menu>
+        </StackPanel>
+        <ToolBar DockPanel.Dock="Top">
+            <Button >
+                <Image Source="/images/new_user.png" Height="32" Width="32" Stretch="Uniform"/>
+            </Button>
+            <Separator/>
+
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Rechercher : " VerticalAlignment="Center"/>
+                <TextBox Text="{Binding SearchCriteria}" Width="150" Height="30" VerticalContentAlignment="Center"/>
+                <Button Content="Recherche" Command="{Binding SearchCommand}"/>
+            </StackPanel>
+
+        </ToolBar>
+        <StatusBar DockPanel.Dock="Bottom" Height="25">
+            <TextBlock Text="Barre de statut " />
+        </StatusBar>
+        <ContentPresenter Content="{Binding VM}"/>
+    </DockPanel>
+</Window>

@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Dictionaries\**" />
+    <EmbeddedResource Remove="Dictionaries\**" />
+    <None Remove="Dictionaries\**" />
+    <Page Remove="Dictionaries\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="images\exit.png" />
+    <None Remove="images\new_user.png" />
+    <None Remove="images\user.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\app_models\BillingManagement.Models.csproj" />
+    <ProjectReference Include="..\BillingManagement.Business\BillingManagement.Business.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="images\exit.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\new_user.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\user.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
+</Project>
