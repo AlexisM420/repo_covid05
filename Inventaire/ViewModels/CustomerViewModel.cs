@@ -3,6 +3,7 @@ using BillingManagement.Models;
 using BillingManagement.UI.ViewModels.Commands;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
 
 namespace BillingManagement.UI.ViewModels
 {
@@ -39,14 +40,14 @@ namespace BillingManagement.UI.ViewModels
         public CustomerViewModel()
         {
             DeleteCustomerCommand = new RelayCommand<Customer>(DeleteCustomer, CanDeleteCustomer);
-            
 
             InitValues();
         }
 
         private void InitValues()
         {
-            Customers = new ObservableCollection<Customer>(customersDataService.GetAll());
+            Customers = new ObservableCollection<Customer>(customersDataService.GetAll().OrderBy(c => c.LastName));
+            //Customers = Customers;
             Debug.WriteLine(Customers.Count);
         }
 
